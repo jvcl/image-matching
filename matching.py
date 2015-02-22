@@ -23,6 +23,13 @@ def hello():
             <input type="submit">
         </form>
     '''
+    
+@app.route('/add-image', methods=['POST', 'GET'])
+def add_image():
+    """
+    Method to add an image to the db
+    """
+    pass
 
 @app.route('/user/<username>/<passs>')
 def userName(username, passs):
