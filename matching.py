@@ -2,7 +2,16 @@ from flask import Flask, request
 import cv2
 import numpy as numpy
 from werkzeug import secure_filename
+
+# configuration
+DATABASE = '/tmp/matching.db'
+DEBUG = True
+SECRET_KEY = 'secret'
+USERNAME = 'admin'
+PASSWORD = 'password'
+
 app = Flask(__name__)
+app.config.from_object(__name__)
 
 @app.route('/')
 def hello_world():
@@ -85,5 +94,4 @@ def calculate_sift(img, name):
         #TODO return the Keypont and descriptor
         
 if __name__ == '__main__':
-    app.debug = True
     app.run()
