@@ -23,12 +23,13 @@ def hello():
         calculate_sift(img, name)
         return "Done"
     #Handle GET request
-    return '''
-        <form action="" method="post" enctype="multipart/form-data">
-            <input type="file" name="pic" accept="image/*">
-            <input type="submit">
-        </form>
-    '''
+    elif request.method == 'GET':
+        return '''
+            <form action="" method="post" enctype="multipart/form-data">
+                <input type="file" name="pic" accept="image/*">
+                <input type="submit">
+            </form>
+        '''
     
 @app.route('/add-image', methods=['POST', 'GET'])
 def add_image():
@@ -44,12 +45,15 @@ def add_image():
         #TODO, SAVE IMAGE, DESCRIPTORS, KEYPOINTS, ADD ENTRY TO DB
         return "Done"
         #Handle GET request, ONLY FOR TESTING
-    return '''
-        <form action="" method="post" enctype="multipart/form-data">
-            <input type="file" name="pic" accept="image/*">
-            <input type="submit">
-        </form>
-    '''
+    #Handle GET request
+    elif request.method == 'GET':
+        return '''
+            <form action="" method="post" enctype="multipart/form-data">
+                <input type="file" name="pic" accept="image/*">
+                <input type="submit">
+            </form>
+        '''
+        
 @app.route('/get-match', methods=['POST', 'GET'])
 def get_match():
     """
