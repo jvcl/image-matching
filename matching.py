@@ -15,13 +15,23 @@ PASSWORD = 'password'
 ROOT = os.path.abspath(os.path.dirname(__file__))
 # assuming application name is same as folder
 APP_NAME = os.path.basename(ROOT)
-DATABASE_NAME = ".db"
+DATABASE_NAME = "images.db"
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(ROOT, "tmp/" + DATABASE_NAME)
 
 # Set up App
 app = Flask(__name__)
 app.config.from_object(__name__)
 db = SQLAlchemy(app)
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Category %r>' % self.name
 
 @app.route('/upload', methods=['POST', 'GET'])
 def hello():
