@@ -55,7 +55,7 @@ def get_match():
     if request.method == 'POST':
         img = request.files['pic']
         name = secure_filename(img.filename)
-
+        #TODO calculate sift then look for a match in the db
 
 @app.route('/user/<username>/<passs>')
 def userName(username, passs):
@@ -81,6 +81,8 @@ def calculate_sift(img, name):
         #Save to file
         img=cv2.drawKeypoints(gray,kp,flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
         cv2.imwrite(name, img)
+
+        #TODO return the Keypont and descriptor
         
 if __name__ == '__main__':
     app.debug = True
