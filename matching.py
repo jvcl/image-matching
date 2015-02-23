@@ -2,16 +2,26 @@ from flask import Flask, request
 import cv2
 import numpy as numpy
 from werkzeug import secure_filename
+import os
+from datetime import datetime
+from flask.ext.sqlalchemy import SQLAlchemy
 
 # configuration
-DATABASE = '/tmp/matching.db'
 DEBUG = True
 SECRET_KEY = 'secret'
 USERNAME = 'admin'
 PASSWORD = 'password'
+# Set root folder and application name
+ROOT = os.path.abspath(os.path.dirname(__file__))
+# assuming application name is same as folder
+APP_NAME = os.path.basename(ROOT)
+DATABASE_NAME = ".db"
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(ROOT, "tmp/" + DATABASE_NAME)
 
+# Set up App
 app = Flask(__name__)
 app.config.from_object(__name__)
+db = SQLAlchemy(app)
 
 @app.route('/upload', methods=['POST', 'GET'])
 def hello():
