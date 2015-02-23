@@ -13,6 +13,7 @@ def hello():
     #Handle POST request
     if request.method == 'POST':
         img = request.files['pic']
+        #TODO, SAVE IMAGE TO FOLDER.
         name = secure_filename(img.filename)
         calculate_sift(img, name)
         return "Done"
@@ -29,7 +30,32 @@ def add_image():
     """
     Method to add an image to the db
     """
-    pass
+    #Handle POST request
+    if request.method == 'POST':
+        img = request.files['pic']
+        name = secure_filename(img.filename)
+        #Method calculate sift descriptors, and returns the descriptor & Keypoint to be saved
+        calculate_sift(img, name)
+        #TODO, SAVE IMAGE, DESCRIPTORS, KEYPOINTS, ADD ENTRY TO DB
+        return "Done"
+        #Handle GET request, ONLY FOR TESTING
+    return '''
+        <form action="" method="post" enctype="multipart/form-data">
+            <input type="file" name="pic" accept="image/*">
+            <input type="submit">
+        </form>
+    '''
+@app.route('/get-match', methods=['POST', 'GET'])
+def get_match():
+    """
+    Method to query the application for a match. It recives a photo to be 
+    matched against the database
+    """
+    #Handle POST request
+    if request.method == 'POST':
+        img = request.files['pic']
+        name = secure_filename(img.filename)
+
 
 @app.route('/user/<username>/<passs>')
 def userName(username, passs):
