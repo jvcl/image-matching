@@ -53,7 +53,7 @@ def add_image():
                 <input type="submit">
             </form>
         '''
-        
+
 @app.route('/get-match', methods=['POST', 'GET'])
 def get_match():
     """
@@ -75,6 +75,9 @@ def show_post(post_id):
     # show the post with the given id, the id is an integer
     return 'Post %d' % post_id
 
+"""
+IMAGE PROCESSING METHODS
+"""
 def calculate_sift(img, name):
     #Convert image to numpy array
         img = numpy.asarray(bytearray(img.read()), dtype=numpy.uint8)
