@@ -13,10 +13,6 @@ PASSWORD = 'password'
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-@app.route('/')
-def hello_world():
-    return "Hello World"
-
 @app.route('/upload', methods=['POST', 'GET'])
 def hello():
     #Handle POST request
