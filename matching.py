@@ -35,6 +35,13 @@ class Category(db.Model):
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80))
+    origin = db.Column(db.String(50))
+    rating = db.Column(db.Float)
+    date_added = db.Column(db.DateTime)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    category = db.relationship('Category',
+        backref=db.backref('items', lazy='dynamic'))
 
     def __init__(self):
         pass
