@@ -33,6 +33,12 @@ class Category(db.Model):
     def __repr__(self):
         return '<Category %r>' % self.name
 
+class Item(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    def __init__(self):
+        pass
+
 @app.route('/upload', methods=['POST', 'GET'])
 def hello():
     #Handle POST request
