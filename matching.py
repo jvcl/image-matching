@@ -43,8 +43,19 @@ class Item(db.Model):
     category = db.relationship('Category',
         backref=db.backref('items', lazy='dynamic'))
 
-    def __init__(self):
-        pass
+    def __init__(self, title, origin, category, rating= None, date_added = None):
+        self.title = title
+        self.origin = origin
+        if rating is None:
+            rating = 0.0
+        self.rating = rating
+        self.category = category
+        if date_added is None:
+            date_added = datetime.utcnow()
+        self.date_added = date_added
+
+        def __repr__(self):
+            return '<Item %r>' % self.name
 
 @app.route('/upload', methods=['POST', 'GET'])
 def hello():
