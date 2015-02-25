@@ -9,3 +9,13 @@ It uses the following libraries:
 * SQL-Alchemy
 * Numpy
 * OpenCv
+
+Install
+-------
+
+Make sure you have got installed the required pip packages
+
+	virtualenv image-matching
+	pip install flask
+	pip install numpy
+	
