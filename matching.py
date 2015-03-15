@@ -5,6 +5,7 @@ from werkzeug import secure_filename
 import os
 from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
+import calc_des as calc_des
 
 # configuration
 DEBUG = True
@@ -122,23 +123,19 @@ def show_post(post_id):
 """
 IMAGE PROCESSING METHODS
 """
-def calculate_sift(img, name):
-    #Convert image to numpy array
-        img = numpy.asarray(bytearray(img.read()), dtype=numpy.uint8)
-        #Read image from memory
-        img = cv2.imdecode(img, cv2.CV_LOAD_IMAGE_UNCHANGED)
-        #Gray scale image
-        gray= cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        #load sift
-        sift = cv2.SIFT()
-        #Detect the KeyPoints descriptors
-        kp = sift.detect(gray,None)
-        
-        #Save to file
-        img=cv2.drawKeypoints(gray,kp,flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        cv2.imwrite(name, img)
 
-        #TODO return the Keypont and descriptor
-        
+def calc_calculate_sift():
+    """
+    Method to calculate the descriptors of each image  in the dataset.
+    """
+    for f in os.listdir("images"):
+        kp, des = calc_des.calculate_sift("images/"+f)
+        print "FINISHING", f
+    
+@app.route('/load_db')
+def load_db():
+    calc_calculate_sift() 
+    return "DONE"
 if __name__ == '__main__':
+    
     app.run()
