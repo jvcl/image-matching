@@ -1,6 +1,6 @@
 from flask import Flask, request
 import cv2
-import numpy as numpy
+import numpy as np
 from werkzeug import secure_filename
 import os
 from datetime import datetime
@@ -23,6 +23,8 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(ROOT, "tmp/" + DATABASE_NA
 app = Flask(__name__)
 app.config.from_object(__name__)
 db = SQLAlchemy(app)
+
+descriptors = {}
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -128,9 +130,12 @@ def calc_calculate_sift():
     """
     Method to calculate the descriptors of each image  in the dataset.
     """
+    global descriptors
     for f in os.listdir("images"):
         kp, des = calc_des.calculate_sift("images/"+f)
+        descriptors[f[0]] = des
         print "FINISHING", f
+    print descriptors
     
 @app.route('/load_db')
 def load_db():
