@@ -135,7 +135,7 @@ def calc_calculate_sift():
         kp, des = calc_des.calculate_sift("images/"+f)
         descriptors[f[0]] = des
         print "FINISHING", f
-    print descriptors
+    #print descriptors
     
 @app.route('/load_db')
 def load_db():

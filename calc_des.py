@@ -8,5 +8,4 @@ def calculate_sift(name):
 	#load sift
     sift = cv2.SIFT()
      #Detect the KeyPoints descriptors
-    kp, des = sift.detectAndCompute(gray,None)
-    return kp, des
+    return sift.detectAndCompute(gray,None)
