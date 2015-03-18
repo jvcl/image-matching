@@ -7,6 +7,7 @@ class ImageItem:
 		self.key_points = []
 		self.descriptor = []
 		self.image = image
+		self.calculate()
 
 	def key_points_and_descriptors(self):
 		return (self.key_points, self.descriptor)

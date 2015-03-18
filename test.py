@@ -5,6 +5,5 @@ import os as os
 
 for f in os.listdir("images"):
 	image = ImageItem("images/"+f)
-	image.calculate()
 	(k, d) = image.key_points_and_descriptors()
 	print d
