@@ -78,13 +78,10 @@ def hello():
         img.save(os.path.join(ROOT, "tmp/" + name))
         query = ImageItem("tmp/"+name, name)
         matcher = match.Matcher()
-        print name
-        r = {}
         r = matcher.search(query, list_images)
         name = r[0][1]
-
-        #calculate_sift(img, name)
         return name
+
     #Handle GET request
     elif request.method == 'GET':
         return '''
