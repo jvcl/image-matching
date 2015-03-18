@@ -18,7 +18,11 @@ class Matcher:
 			# Get the score of the current image compared with the query image
 			score = self.get_score(query_kps, query_descriptor, kps, descriptor)
 			result[image.name()] = score
-			print score
+
+		# Sort results by score
+		if len(result) > 0:
+			result = sorted([(v, k) for (k, v) in result.items() if v > 0],
+				reverse = True)
 		return result
 
 	def get_score(self, query_kps, query_descriptor, kps, descriptor):

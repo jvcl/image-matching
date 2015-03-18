@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 
 class ImageItem:
-	def __init__(self, image_name):
+	def __init__(self, image, image_name):
 		# Instance variables
 		self.key_points = []
 		self.descriptor = []
-		self.image = "images/"+image_name
+		self.image = image
 		self.image_name = image_name
 		self.calculate()
 
