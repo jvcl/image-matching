@@ -6,6 +6,9 @@ import os
 from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
 import calc_des as calc_des
+from ImageItem import ImageItem
+import matcher as match
+
 
 # configuration
 DEBUG = True
@@ -24,7 +27,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 db = SQLAlchemy(app)
 
-descriptors = {}
+list_images = []
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -64,11 +67,24 @@ class Item(db.Model):
 def hello():
     #Handle POST request
     if request.method == 'POST':
+        
+        #Check if the databse has been proccesed 
+        if not list_images:
+            calc_calculate_sift()
+
         img = request.files['pic']
         #TODO, SAVE IMAGE TO FOLDER.
         name = secure_filename(img.filename)
-        calculate_sift(img, name)
-        return "Done"
+        img.save(os.path.join(ROOT, "tmp/" + name))
+        query = ImageItem("tmp/"+name, name)
+        matcher = match.Matcher()
+        print name
+        r = {}
+        r = matcher.search(query, list_images)
+        name = r[0][1]
+
+        #calculate_sift(img, name)
+        return name
     #Handle GET request
     elif request.method == 'GET':
         return '''
@@ -130,13 +146,12 @@ def calc_calculate_sift():
     """
     Method to calculate the descriptors of each image  in the dataset.
     """
-    global descriptors
+    global list_images
     for f in os.listdir("images"):
-        kp, des = calc_des.calculate_sift("images/"+f)
-        descriptors[f[0]] = des
+        image = ImageItem("images/"+f, f)
+        list_images.append(image)
         print "FINISHING", f
-    #print descriptors
-    
+
 @app.route('/load_db')
 def load_db():
     calc_calculate_sift() 
