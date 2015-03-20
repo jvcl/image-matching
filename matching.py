@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import cv2
 import numpy as np
 from werkzeug import secure_filename
@@ -59,7 +59,6 @@ class Item(db.Model):
         if date_added is None:
             date_added = datetime.utcnow()
         self.date_added = date_added
-
         def __repr__(self):
             return '<Item %r>' % self.name
 
@@ -68,10 +67,9 @@ def hello():
     #Handle POST request
     if request.method == 'POST':
         
-        #Check if the databse has been proccesed 
+        #Check if the database has been proccesed 
         if not list_images:
             calc_calculate_sift()
-
         img = request.files['pic']
         #TODO, SAVE IMAGE TO FOLDER.
         name = secure_filename(img.filename)
@@ -79,8 +77,9 @@ def hello():
         query = ImageItem("tmp/"+name, name)
         matcher = match.Matcher()
         r = matcher.search(query, list_images)
-        name = r[0][1]
-        return name
+        name = str(r[0][1])
+        t = {"name": n}
+        return jsonify(t)
 
     #Handle GET request
     elif request.method == 'GET':
@@ -114,26 +113,10 @@ def add_image():
             </form>
         '''
 
-@app.route('/get-match', methods=['POST', 'GET'])
-def get_match():
-    """
-    Method to query the application for a match. It recives a photo to be 
-    matched against the database
-    """
-    #Handle POST request
-    if request.method == 'POST':
-        img = request.files['pic']
-        name = secure_filename(img.filename)
-        #TODO calculate sift then look for a match in the db
-
-@app.route('/user/<username>/<passs>')
-def userName(username, passs):
-    return "Hello " + username + " " + passs
-
-@app.route('/post/<int:post_id>')
-def show_post(post_id):
-    # show the post with the given id, the id is an integer
-    return 'Post %d' % post_id
+@app.route('/test')
+def test():
+    t = {"jorge":"2"}
+    return jsonify(t)
 
 """
 IMAGE PROCESSING METHODS
@@ -154,5 +137,4 @@ def load_db():
     calc_calculate_sift() 
     return "DONE"
 if __name__ == '__main__':
-    
     app.run()
