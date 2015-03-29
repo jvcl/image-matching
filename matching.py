@@ -5,6 +5,8 @@ from werkzeug import secure_filename
 import os
 from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.script import Manager
+from flask.ext.migrate import Migrate, MigrateCommand
 import calc_des as calc_des
 from ImageItem import ImageItem
 import matcher as match
@@ -15,6 +17,7 @@ DEBUG = True
 SECRET_KEY = 'secret'
 USERNAME = 'admin'
 PASSWORD = 'password'
+HOST = '0.0.0.0'
 # Set root folder and application name
 ROOT = os.path.abspath(os.path.dirname(__file__))
 # assuming application name is same as folder
@@ -26,6 +29,9 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(ROOT, "tmp/" + DATABASE_NA
 app = Flask(__name__)
 app.config.from_object(__name__)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
 
 list_images = []
 
@@ -45,13 +51,14 @@ class Item(db.Model):
     origin = db.Column(db.String(50))
     rating = db.Column(db.Float)
     description = db.Column(db.String(500))
+    ingredients = db.Column(db.String(500))
     url = db.Column(db.String(80), unique=True)
     date_added = db.Column(db.DateTime)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Category',
         backref=db.backref('items', lazy='dynamic'))
 
-    def __init__(self, title, origin, category, url, description, rating= None, date_added = None):
+    def __init__(self, title, origin, category, url, description, ingredients, rating= None, date_added = None):
         id = db.Column(db.Integer, primary_key=True)
         self.title = title
         self.origin = origin
@@ -61,6 +68,7 @@ class Item(db.Model):
         self.url =  url
         self.category = category
         self.description = description
+        self.ingredients = ingredients
         if date_added is None:
             date_added = datetime.utcnow()
         self.date_added = date_added
@@ -150,11 +158,6 @@ def add_image():
                 <input type="submit">
             '''
             
-@app.route('/test')
-def test():
-    t = {"jorge":"2"}
-    return jsonify(t)
-
 """
 IMAGE PROCESSING METHODS
 """
@@ -176,4 +179,4 @@ def load_db():
     calc_calculate_sift() 
     return "DONE"
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    manager.run()
