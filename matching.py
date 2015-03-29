@@ -44,17 +44,19 @@ class Item(db.Model):
     title = db.Column(db.String(80))
     origin = db.Column(db.String(50))
     rating = db.Column(db.Float)
+    url = db.Column(db.String(80))
     date_added = db.Column(db.DateTime)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Category',
         backref=db.backref('items', lazy='dynamic'))
 
-    def __init__(self, title, origin, category, rating= None, date_added = None):
+    def __init__(self, title, origin, category, url, rating= None, date_added = None):
         self.title = title
         self.origin = origin
         if rating is None:
             rating = 0.0
         self.rating = rating
+        self.url =  url
         self.category = category
         if date_added is None:
             date_added = datetime.utcnow()
