@@ -99,7 +99,8 @@ def hello():
         if img_item is None:
             return abort(404)
 
-        t = {"title": img_item.title, "origin": img_item.origin, "category": img_item.category.name, "description": img_item.description}
+        t = {"title": img_item.title, "origin": img_item.origin, "category": img_item.category.name, 
+                "description": img_item.description, "ingredients": img_item.ingredients}
         return jsonify(t)
 
     #Handle GET request
@@ -123,6 +124,8 @@ def add_image():
         img_origin = request.form['origin']
         img_category = request.form['category']
         img_desc = request.form['desc']
+        img_ingredients = request.form['ingredients']
+        img_ingredients = img_ingredients.replace('\r\n','')
         #name = secure_filename(img.filename)
 
         category = Category.query.filter_by(name=img_category).first()
@@ -137,7 +140,7 @@ def add_image():
             num_of_items = Item.query.all()[-1].id
 
         name_img_db = img_title + "_" + img_category + "_" + str(num_of_items + 1) + ".jpg"
-        item = Item(img_title, img_origin, category, name_img_db, img_desc)
+        item = Item(img_title, img_origin, category, name_img_db, img_desc, img_ingredients)
         db.session.add(item)
         db.session.commit()
         img.save("images/%s" % name_img_db)
@@ -154,7 +157,10 @@ def add_image():
                 <input type="text" name="origin"><br>
                 Category:<br>
                 <input type="text" name="category"><br>
-                <textarea name="desc" rows="10" cols="30"></textarea>
+                Description:<br>
+                <textarea name="desc"></textarea><br>
+                Ingredients:<br>
+                <textarea name="ingredients"></textarea><br>
                 <input type="submit">
             '''
             
