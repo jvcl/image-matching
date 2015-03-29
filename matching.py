@@ -44,7 +44,7 @@ class Item(db.Model):
     title = db.Column(db.String(80))
     origin = db.Column(db.String(50))
     rating = db.Column(db.Float)
-    url = db.Column(db.String(80))
+    url = db.Column(db.String(80), unique=True)
     date_added = db.Column(db.DateTime)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Category',
@@ -61,8 +61,9 @@ class Item(db.Model):
         if date_added is None:
             date_added = datetime.utcnow()
         self.date_added = date_added
+        
         def __repr__(self):
-            return '<Item %r>' % self.name
+            return '<item %r>' % self.title
 
 @app.route('/upload', methods=['POST', 'GET'])
 def hello():

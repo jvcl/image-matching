@@ -1,29 +1,10 @@
-from ImageItem import ImageItem
-import os as os
-import matcher as matcher
-import time
+from matching import Category, Item, db
 
+cat1 = Category.query.filter_by(name = "Beer").first()
 
-#print os.listdir("images")
+print cat1.name, "NAME"
+print cat1.items.all()
 
-list_images = []
-
-start2 = time.clock()
-for f in os.listdir("images"):
-	image = ImageItem("images/"+f, f)
-	list_images.append(image)
-
-matcher = matcher.Matcher()
-
-elap2 = time.clock() - start2
-
-print elap2
-for f in os.listdir("queries"):
-	start2 = time.clock()
-	query = ImageItem("queries/"+f, f)
-	r = {}
-	r = matcher.search(query, list_images)
-	elap2 = time.clock() - start2
-	print r, elap2
-
-
+print Category.query.all()
+beer = Item.query.filter_by(title = "Corona").first()
+print beer.title
