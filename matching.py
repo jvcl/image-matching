@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 import cv2
 import numpy as np
 from werkzeug import secure_filename
@@ -80,8 +80,17 @@ def hello():
         query = ImageItem("tmp/"+name, name)
         matcher = match.Matcher()
         r = matcher.search(query, list_images)
+        print r
+        if not r :
+            return abort(404)
+
         name = str(r[0][1])
-        t = {"name": name}
+
+        img_item = Item.query.filter_by(url=name).first()
+        if img_item is None:
+            return abort(404)
+
+        t = {"title": img_item.title, "origin": img_item.origin, "category": img_item.category.name}
         return jsonify(t)
 
     #Handle GET request
