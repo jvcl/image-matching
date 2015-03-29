@@ -14,7 +14,7 @@ print len(items), "nUMBER OF ITEMS"
 
 
 
-print Item.query.all()[-1].id
+print Item.query.all()[-1].id + 1
 
 
 #beer = Category.query.filter_by(name = "Beers").first()
