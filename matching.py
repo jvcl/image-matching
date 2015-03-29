@@ -51,6 +51,7 @@ class Item(db.Model):
         backref=db.backref('items', lazy='dynamic'))
 
     def __init__(self, title, origin, category, url, rating= None, date_added = None):
+        id = db.Column(db.Integer, primary_key=True)
         self.title = title
         self.origin = origin
         if rating is None:
@@ -68,9 +69,7 @@ class Item(db.Model):
 @app.route('/upload', methods=['POST', 'GET'])
 def hello():
     #Handle POST request
-    if request.method == 'POST':
-        print "here"
-        
+    if request.method == 'POST':       
         #Check if the database has been proccesed 
         if not list_images:
             calc_calculate_sift()
@@ -102,20 +101,44 @@ def add_image():
     #Handle POST request
     if request.method == 'POST':
         img = request.files['pic']
-        name = secure_filename(img.filename)
-        #Method calculate sift descriptors, and returns the descriptor & Keypoint to be saved
-        calculate_sift(img, name)
-        #TODO, SAVE IMAGE, DESCRIPTORS, KEYPOINTS, ADD ENTRY TO DB
-        return "Done"
-        #Handle GET request, ONLY FOR TESTING
+        img_title = request.form['name']
+        img_origin = request.form['origin']
+        img_category = request.form['category']
+        #name = secure_filename(img.filename)
+
+        category = Category.query.filter_by(name=img_category).first()
+
+        if category is None:
+            return "Category not found"
+        #Check if there is items in the category
+        items = Item.query.all()
+        if items is None:
+            num_of_items = 0
+        else:
+            num_of_items = Item.query.all()[-1].id
+
+        name_img_db = img_title + "_" + img_category + str(num_of_items + 1) + ".jpg"
+        item = Item(img_title, img_origin, category, name_img_db)
+        db.session.add(item)
+        db.session.commit()
+        img.save("images/%s" % name_img_db)
+        return "Added"
+
     #Handle GET request
     elif request.method == 'GET':
         return '''
             <form action="" method="post" enctype="multipart/form-data">
-                <input type="file" name="pic" accept="image/*">
+                <input type="file" name="pic" accept="image/*"><br>
+                Title:<br>
+                <input type="text" name="name"><br>
+                Origin:<br>
+                <input type="text" name="origin"><br>
+                Category:<br>
+                <input type="text" name="category"><br>
                 <input type="submit">
-            </form>
-        '''
+            '''
+            
+        
 
 @app.route('/test')
 def test():
