@@ -16,6 +16,14 @@ class ImageItem:
 	def calculate(self):
 		# detect keypoints in the image
 		img = cv2.imread(self.image)
+		#Resize umage if to big
+		height, width, depth = img.shape
+		print width
+		print height
+		if width > 680:
+			height, width, depth = img.shape
+			density = float("{0:.2f}".format(680.0/width))
+			img = cv2.resize(img, (0,0), fx=density, fy=density)  
 		gray= cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 		sift = cv2.SIFT()
 		self.key_points, self.descriptor = sift.detectAndCompute(gray,None)

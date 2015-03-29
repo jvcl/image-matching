@@ -66,6 +66,7 @@ class Item(db.Model):
 def hello():
     #Handle POST request
     if request.method == 'POST':
+        print "here"
         
         #Check if the database has been proccesed 
         if not list_images:
@@ -78,7 +79,7 @@ def hello():
         matcher = match.Matcher()
         r = matcher.search(query, list_images)
         name = str(r[0][1])
-        t = {"name": n}
+        t = {"name": name}
         return jsonify(t)
 
     #Handle GET request
@@ -137,4 +138,4 @@ def load_db():
     calc_calculate_sift() 
     return "DONE"
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
