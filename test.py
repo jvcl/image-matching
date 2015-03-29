@@ -1,20 +1,15 @@
 from matching import Category, Item, db
 
-# db.create_all()
-# db.session.add(Category("Beer"))
-# db.session.add(Category("Food"))
-# db.session.add(Category("Wine"))
-# #db.session.add(Item("Corona", "Mexico", ca, "im.jpg"))
-# db.session.commit()
+db.create_all()
+db.session.add(Category("Beer"))
+db.session.add(Category("Food"))
+db.session.add(Category("Wine"))
+#db.session.add(Item("Corona", "Mexico", ca, "im.jpg"))
+db.session.commit()
 
 categories = Category.query.all()
-items = Item.query.all()
+print categories
 
-print len(items), "nUMBER OF ITEMS"
-
-
-
-print Item.query.all()[-1].id + 1
 
 
 #beer = Category.query.filter_by(name = "Beers").first()

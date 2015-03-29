@@ -44,13 +44,14 @@ class Item(db.Model):
     title = db.Column(db.String(80))
     origin = db.Column(db.String(50))
     rating = db.Column(db.Float)
+    description = db.Column(db.String(500))
     url = db.Column(db.String(80), unique=True)
     date_added = db.Column(db.DateTime)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Category',
         backref=db.backref('items', lazy='dynamic'))
 
-    def __init__(self, title, origin, category, url, rating= None, date_added = None):
+    def __init__(self, title, origin, category, url, description, rating= None, date_added = None):
         id = db.Column(db.Integer, primary_key=True)
         self.title = title
         self.origin = origin
@@ -59,6 +60,7 @@ class Item(db.Model):
         self.rating = rating
         self.url =  url
         self.category = category
+        self.description = description
         if date_added is None:
             date_added = datetime.utcnow()
         self.date_added = date_added
@@ -79,18 +81,17 @@ def hello():
         img.save(os.path.join(ROOT, "tmp/" + name))
         query = ImageItem("tmp/"+name, name)
         matcher = match.Matcher()
+        
         r = matcher.search(query, list_images)
-        print r
         if not r :
             return abort(404)
 
         name = str(r[0][1])
-
         img_item = Item.query.filter_by(url=name).first()
         if img_item is None:
             return abort(404)
 
-        t = {"title": img_item.title, "origin": img_item.origin, "category": img_item.category.name}
+        t = {"title": img_item.title, "origin": img_item.origin, "category": img_item.category.name, "description": img_item.description}
         return jsonify(t)
 
     #Handle GET request
@@ -113,6 +114,7 @@ def add_image():
         img_title = request.form['name']
         img_origin = request.form['origin']
         img_category = request.form['category']
+        img_desc = request.form['desc']
         #name = secure_filename(img.filename)
 
         category = Category.query.filter_by(name=img_category).first()
@@ -121,13 +123,13 @@ def add_image():
             return "Category not found"
         #Check if there is items in the category
         items = Item.query.all()
-        if items is None:
+        if not items:
             num_of_items = 0
         else:
             num_of_items = Item.query.all()[-1].id
 
         name_img_db = img_title + "_" + img_category + "_" + str(num_of_items + 1) + ".jpg"
-        item = Item(img_title, img_origin, category, name_img_db)
+        item = Item(img_title, img_origin, category, name_img_db, img_desc)
         db.session.add(item)
         db.session.commit()
         img.save("images/%s" % name_img_db)
@@ -144,11 +146,10 @@ def add_image():
                 <input type="text" name="origin"><br>
                 Category:<br>
                 <input type="text" name="category"><br>
+                <textarea name="desc" rows="10" cols="30"></textarea>
                 <input type="submit">
             '''
             
-        
-
 @app.route('/test')
 def test():
     t = {"jorge":"2"}
@@ -164,6 +165,8 @@ def calc_calculate_sift():
     """
     global list_images
     for f in os.listdir("images"):
+        if f == ".DS_Store":
+            continue 
         image = ImageItem("images/"+f, f)
         list_images.append(image)
         print "FINISHING", f
