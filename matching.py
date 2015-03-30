@@ -139,7 +139,7 @@ def add_image():
         else:
             num_of_items = Item.query.all()[-1].id
 
-        name_img_db = img_title + "_" + img_category + "_" + str(num_of_items + 1) + ".jpg"
+        name_img_db = img_category + "_" + str(num_of_items + 1) + ".jpg"
         item = Item(img_title, img_origin, category, name_img_db, img_desc, img_ingredients)
         db.session.add(item)
         db.session.commit()
@@ -186,3 +186,4 @@ def load_db():
     return "DONE"
 if __name__ == '__main__':
     manager.run()
+
