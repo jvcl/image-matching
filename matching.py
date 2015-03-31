@@ -7,7 +7,6 @@ from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
-import calc_des as calc_des
 from ImageItem import ImageItem
 import matcher as match
 
@@ -17,7 +16,6 @@ DEBUG = True
 SECRET_KEY = 'secret'
 USERNAME = 'admin'
 PASSWORD = 'password'
-HOST = '0.0.0.0'
 # Set root folder and application name
 ROOT = os.path.abspath(os.path.dirname(__file__))
 # assuming application name is same as folder
@@ -180,7 +178,7 @@ def calc_calculate_sift():
         list_images.append(image)
         print "FINISHING", f
 
-@app.route('/load_db')
+@app.route('/')
 def load_db():
     calc_calculate_sift() 
     return "DONE"
