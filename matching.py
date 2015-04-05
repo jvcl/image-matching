@@ -178,7 +178,7 @@ def calc_calculate_sift():
         list_images.append(image)
         print "FINISHING", f
 
-@app.route('/')
+@app.route('/load_db')
 def load_db():
     calc_calculate_sift() 
     return "DONE"
