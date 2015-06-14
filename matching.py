@@ -78,6 +78,7 @@ class Item(db.Model):
 def hello():
     #Handle POST request
     if request.method == 'POST':
+        start = datetime.now()
         #Check if the database has been proccesed
         if not list_images:
             calc_calculate_sift()
@@ -90,15 +91,23 @@ def hello():
 
         r = matcher.search(query, list_images)
         if not r :
+            delta = end-start
+            print delta
             return abort(404)
 
         name = str(r[0][1])
         img_item = Item.query.filter_by(url=name).first()
+
+        end = datetime.now()
+
         if img_item is None:
             return abort(404)
 
         t = {"title": img_item.title, "origin": img_item.origin, "category": img_item.category.name,
                 "description": img_item.description, "ingredients": img_item.ingredients}
+
+        delta = end-start
+        print delta
         return jsonify(t)
 
     #Handle GET request

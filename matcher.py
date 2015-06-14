@@ -30,7 +30,7 @@ class Matcher:
 		Method to score the similarity of the query image with another image
 		"""
 		ratio = 0.7
-		minMatches = 150
+		minMatches = 100
 		matcher = cv2.DescriptorMatcher_create("BruteForce")
 		rawMatches = matcher.knnMatch(descriptor, query_descriptor, 2)
 		matches = []
