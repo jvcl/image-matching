@@ -70,15 +70,15 @@ class Item(db.Model):
         if date_added is None:
             date_added = datetime.utcnow()
         self.date_added = date_added
-        
+
         def __repr__(self):
             return '<item %r>' % self.title
 
 @app.route('/upload', methods=['POST', 'GET'])
 def hello():
     #Handle POST request
-    if request.method == 'POST':       
-        #Check if the database has been proccesed 
+    if request.method == 'POST':
+        #Check if the database has been proccesed
         if not list_images:
             calc_calculate_sift()
         img = request.files['pic']
@@ -87,7 +87,7 @@ def hello():
         img.save(os.path.join(ROOT, "tmp/" + name))
         query = ImageItem("tmp/"+name, name)
         matcher = match.Matcher()
-        
+
         r = matcher.search(query, list_images)
         if not r :
             return abort(404)
@@ -97,7 +97,7 @@ def hello():
         if img_item is None:
             return abort(404)
 
-        t = {"title": img_item.title, "origin": img_item.origin, "category": img_item.category.name, 
+        t = {"title": img_item.title, "origin": img_item.origin, "category": img_item.category.name,
                 "description": img_item.description, "ingredients": img_item.ingredients}
         return jsonify(t)
 
@@ -109,7 +109,7 @@ def hello():
                 <input type="submit">
             </form>
         '''
-    
+
 @app.route('/add-image', methods=['POST', 'GET'])
 def add_image():
     """
@@ -161,7 +161,7 @@ def add_image():
                 <textarea name="ingredients"></textarea><br>
                 <input type="submit">
             '''
-            
+
 """
 IMAGE PROCESSING METHODS
 """
@@ -173,15 +173,14 @@ def calc_calculate_sift():
     global list_images
     for f in os.listdir("images"):
         if f == ".DS_Store":
-            continue 
+            continue
         image = ImageItem("images/"+f, f)
         list_images.append(image)
         print "FINISHING", f
 
 @app.route('/load_db')
 def load_db():
-    calc_calculate_sift() 
+    calc_calculate_sift()
     return "DONE"
 if __name__ == '__main__':
     manager.run()
-

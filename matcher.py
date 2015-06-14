@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 
 class Matcher:
-	
+
 	def search(self, query_image, list_images):
 		"""
 		Method to search in the database a match with the query image
